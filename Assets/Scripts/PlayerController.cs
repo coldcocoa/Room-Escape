@@ -26,7 +26,13 @@ public class Player_Ctrl : MonoBehaviour
     [Header("Ground Check")]
     public float playerHeight;
     bool grounded;
-    
+
+
+    [Header("UI")]
+    public float interactRange = 3f;         // E키 상호작용 범위
+    public LayerMask interactableLayer;      // 상호작용 대상 레이어 (문 등)
+
+
     void Start()
     {
         //Cursor.lockState = CursorLockMode.Locked;   // 마우스 커서를 화면 안에서 고정
@@ -49,7 +55,22 @@ public class Player_Ctrl : MonoBehaviour
             Jump();
         }
 
-        
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            // 카메라의 마우스 위치를 기준으로 레이 발사
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            // interactableLayer를 사용해 필요한 오브젝트만 감지
+            if (Physics.Raycast(ray, out hit, interactRange, interactableLayer))
+            {
+                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+                if (interactable != null)
+                {
+                    interactable.Interact();
+                }
+            }
+        }
     }
 
     void Rotate()
