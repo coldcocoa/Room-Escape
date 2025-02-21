@@ -34,6 +34,8 @@ public class Player_Ctrl : MonoBehaviour
     public float interactRange = 5f;         // E키 상호작용 범위
     public LayerMask interactableLayer;      // 상호작용 대상 레이어 (문 등)
 
+    
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();     // Rigidbody 가져오기
@@ -114,4 +116,6 @@ public class Player_Ctrl : MonoBehaviour
     {
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
+
+    
 }
