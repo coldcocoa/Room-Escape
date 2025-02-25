@@ -34,8 +34,10 @@ public class Player_Ctrl : MonoBehaviour
     public float interactRange = 5f;         // E키 상호작용 범위
     public LayerMask interactableLayer;      // 상호작용 대상 레이어 (문 등)
 
-    
+    [Header("Puzzle Interaction")]
+    public LayerMask puzzleLayer; // 퍼즐 상호작용 레이어
 
+    public bool isPuzzleModeActive = false;
     void Start()
     {
         rb = GetComponent<Rigidbody>();     // Rigidbody 가져오기
@@ -56,16 +58,27 @@ public class Player_Ctrl : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.E))
         {
-            // 카메라의 정면에서 Ray 발사하여 상호작용 감지
-            Ray ray = new Ray(cam.position, cam.forward);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit, interactRange, interactableLayer))
+            if (isPuzzleModeActive)
             {
-                IInteractable interactable = hit.collider.GetComponent<IInteractable>();
-                if (interactable != null)
+                TogglePuzzleMode(false);
+            }
+            else
+            {
+                Ray ray = new Ray(cam.position, cam.forward);
+                RaycastHit hit;
+                // 우선 퍼즐 영역 확인
+                if (Physics.Raycast(ray, out hit, interactRange, puzzleLayer))
                 {
-                    interactable.Interact();
+                    TogglePuzzleMode(true);
+                }
+                // 퍼즐 영역이 아니라면 일반 상호작용 객체 처리
+                else if (Physics.Raycast(ray, out hit, interactRange, interactableLayer))
+                {
+                    IInteractable interactable = hit.collider.GetComponent<IInteractable>();
+                    if (interactable != null)
+                    {
+                        interactable.Interact();
+                    }
                 }
             }
         }
@@ -73,6 +86,8 @@ public class Player_Ctrl : MonoBehaviour
 
     void Rotate()
     {
+        if (isPuzzleModeActive)
+            return;
         // 마우스 이동값 가져오기
         float mouseX = Input.GetAxis("Mouse X") * mouseSpeed * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSpeed * Time.deltaTime;
@@ -117,5 +132,25 @@ public class Player_Ctrl : MonoBehaviour
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
     }
 
-    
+    void TogglePuzzleMode(bool activate)
+    {
+        isPuzzleModeActive = activate;
+        if (activate)
+        {
+            // 퍼즐 모드 활성화: 커서 보이게, 잠금 해제 및 인벤토리 UI 활성화
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            if (Inventory.Instance != null)
+                Inventory.Instance.ShowInventory(true);
+        }
+        else
+        {
+            // 퍼즐 모드 비활성화: 커서 숨기고 다시 고정, 인벤토리 UI 숨김
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
+            if (Inventory.Instance != null)
+                Inventory.Instance.ShowInventory(false);
+        }
+    }
+
 }
