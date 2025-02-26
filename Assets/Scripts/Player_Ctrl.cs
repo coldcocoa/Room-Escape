@@ -43,13 +43,14 @@ public class Player_Ctrl : MonoBehaviour
         rb = GetComponent<Rigidbody>();     // Rigidbody 가져오기
         rb.freezeRotation = true;           // Rigidbody의 회전 잠금
         Cursor.lockState = CursorLockMode.Locked;  // 마우스 커서 고정
+        Cursor.visible = false;
     }
 
     void Update()
     {
         Rotate();
         Move();
-        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f);
+        grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.2f + 0.1f);
 
         if (grounded && Input.GetKeyDown(KeyCode.Space))
         {
