@@ -3,30 +3,33 @@ using UnityEngine;
 [System.Serializable]
 public struct DoorAnimationPair
 {
-    public string openAnimName;      // 예: "Door_Open"
-    public AnimationClip openClip;   // 열림 애니메이션 클립
-    public string closeAnimName;     // 예: "Door_Close"
-    public AnimationClip closeClip;  // 닫힘 애니메이션 클립
+    public string openAnimName;
+    public AnimationClip openClip;
+    public string closeAnimName;
+    public AnimationClip closeClip;
 }
 
 public class DoorInteraction : MonoBehaviour, IInteractable
 {
-    public float requiredDistance = 3f; // 상호작용 가능 거리
+    public float requiredDistance = 3f;
     public bool isOpen = false;
-
-    // 여러 문 애니메이션 설정을 배열로 관리
+    public InteractionSoundManager soundManager; // 공용 사운드 매니저 (사용 안 함)
+    public DoorSound doorSound; // 문별 개별 사운드 시스템 추가
     public DoorAnimationPair[] doorAnimations;
-
     private Animation anim;
 
     void Start()
     {
+        // 문별 사운드 컴포넌트 가져오기
+        doorSound = GetComponent<DoorSound>();
+
         // Animation 컴포넌트가 없으면 추가
         anim = GetComponent<Animation>();
         if (anim == null)
         {
             anim = gameObject.AddComponent<Animation>();
         }
+
         // 등록된 모든 애니메이션 클립을 Animation 컴포넌트에 추가
         foreach (var pair in doorAnimations)
         {
@@ -69,16 +72,23 @@ public class DoorInteraction : MonoBehaviour, IInteractable
     {
         isOpen = true;
         Debug.Log("Door opened!");
-        // 예시: 첫 번째 문 애니메이션의 열림 애니메이션 재생
+
         if (doorAnimations.Length > 0)
             anim.Play(doorAnimations[0].openAnimName);
+
+        if (doorSound != null)
+            doorSound.PlayDoorOpenSound(); // 문별 열리는 소리 재생
     }
 
     private void CloseDoor()
     {
         isOpen = false;
         Debug.Log("Door closed!");
+
         if (doorAnimations.Length > 0)
             anim.Play(doorAnimations[0].closeAnimName);
+
+        if (doorSound != null)
+            doorSound.PlayDoorCloseSound(); // 문별 닫히는 소리 재생
     }
 }

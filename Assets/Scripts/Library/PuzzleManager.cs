@@ -4,22 +4,23 @@ public class PuzzleManager : MonoBehaviour
 {
     public BookSlot[] bookSlots;      // 모든 책 슬롯 배열
     public float resetDelay = 2f;     // 틀렸을 경우 리셋하기 전 지연 시간
-
+    public GameObject TimeTable2;
+    private bool isOK = true;
     private float timer = 0f;
 
     void Update()
     {
-        // 모든 슬롯이 채워졌는지 먼저 확인
+        if (!isOK) return; // 퍼즐 성공 후에는 더 이상 실행하지 않음
+
         if (CheckAllSlotsFilled())
         {
             if (CheckPuzzleCompletion())
             {
-                Debug.Log("퍼즐 완료! 책이 올바르게 배치되었습니다.");
-                // 여기서 추가 이벤트 (예: 문 열기 등) 실행
+                TimeTable2.SetActive(true); // 시간표 활성화
+                isOK = false; // 이후로 Update에서 실행되지 않도록 막음
             }
             else
             {
-                // 모든 슬롯이 채워졌지만 퍼즐이 틀렸다면, 지연 후 리셋
                 timer += Time.deltaTime;
                 if (timer >= resetDelay)
                 {
@@ -34,33 +35,28 @@ public class PuzzleManager : MonoBehaviour
         }
     }
 
-    // 모든 슬롯이 채워졌는지 확인
     private bool CheckAllSlotsFilled()
     {
         foreach (BookSlot slot in bookSlots)
         {
-            if (!slot.IsSlotFilled())
-                return false;
+            if (!slot.IsSlotFilled()) return false;
         }
         return true;
     }
 
-    // 모든 슬롯이 올바른 책으로 꽂혔는지 확인
     private bool CheckPuzzleCompletion()
     {
+        if (!isOK) return true; // 퍼즐 성공 후에는 항상 true 반환
         foreach (BookSlot slot in bookSlots)
         {
-            if (!slot.IsBookPlacedCorrectly())
-            {
-                return false;
-            }
+            if (!slot.IsBookPlacedCorrectly()) return false;
         }
         return true;
     }
 
-    // 퍼즐이 틀린 슬롯의 책을 원래 자리로 되돌림
     private void ResetIncorrectBooks()
     {
+        if (!isOK) return; // 퍼즐 성공 시 리셋 방지
         Debug.Log("퍼즐 실패: 책을 원래 자리로 리셋합니다.");
         foreach (BookSlot slot in bookSlots)
         {

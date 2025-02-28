@@ -8,6 +8,8 @@ namespace NavKeypad
 {
     public class Keypad : MonoBehaviour
     {
+        public DoorSound doorSound; // 문별 개별 사운드 시스템 추가
+        public OpenDoor_KeyPad openDoor_KeyPad;
         [Header("Events")]
         [SerializeField] private UnityEvent onAccessGranted;
         [SerializeField] private UnityEvent onAccessDenied;
@@ -45,6 +47,7 @@ namespace NavKeypad
 
         private void Awake()
         {
+            doorSound = GetComponent<DoorSound>();
             ClearInput();
             panelMesh.material.SetVector("_EmissionColor", screenNormalColor * screenIntensity);
         }
@@ -125,6 +128,9 @@ namespace NavKeypad
             onAccessGranted?.Invoke();
             panelMesh.material.SetVector("_EmissionColor", screenGrantedColor * screenIntensity);
             audioSource.PlayOneShot(accessGrantedSfx);
+            openDoor_KeyPad.OpenDoor();
+            if (doorSound != null)
+                doorSound.PlayDoorOpenSound(); // 문별 열리는 소리 재생
         }
 
     }
