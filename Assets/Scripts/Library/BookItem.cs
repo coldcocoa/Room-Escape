@@ -12,8 +12,11 @@ public class BookItem : MonoBehaviour, IInteractable
 
     private bool isCollected = false; // 책을 이미 획득했는지 여부
 
+    public InteractionSoundManager soundManager;
+
     public void Interact()
     {
+        soundManager = GameObject.Find("SoundManager").GetComponent<InteractionSoundManager>();
         if (isCollected) return; // 이미 획득한 경우 무시
 
         isCollected = true;
@@ -26,6 +29,7 @@ public class BookItem : MonoBehaviour, IInteractable
     {
         if (bookUIPanel != null && bookUIText != null)
         {
+            soundManager.PlaybookPickUpSound();
             bookUIPanel.SetActive(true);
             bookUIText.text = $"책을 획득했습니다!\n\n제목: {title}\n출판년도: {BookYear}"; // 텍스트 변경
             Invoke("HideBookUI", 4f); // 2초 후 UI 자동 숨김

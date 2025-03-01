@@ -20,7 +20,7 @@ public class Inventory : MonoBehaviour
         {
             slot.sprite = emptySlotSprite;
         }
-        gameObject.SetActive(false); // 기본적으로 비활성화
+        //gameObject.SetActive(false); // 기본적으로 비활성화
     }
 
     public bool AddItem(Sprite pieceSprite)

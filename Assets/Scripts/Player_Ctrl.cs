@@ -141,16 +141,16 @@ public class Player_Ctrl : MonoBehaviour
             // 퍼즐 모드 활성화: 커서 보이게, 잠금 해제 및 인벤토리 UI 활성화
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            if (Inventory.Instance != null)
-                Inventory.Instance.ShowInventory(true);
+            /*if (Inventory.Instance != null)
+                Inventory.Instance.ShowInventory(true);*/
         }
         else
         {
             // 퍼즐 모드 비활성화: 커서 숨기고 다시 고정, 인벤토리 UI 숨김
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
-            if (Inventory.Instance != null)
-                Inventory.Instance.ShowInventory(false);
+            /*if (Inventory.Instance != null)
+                Inventory.Instance.ShowInventory(false);*/
         }
     }
 

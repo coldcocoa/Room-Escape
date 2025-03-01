@@ -7,7 +7,12 @@ public class PuzzleManager : MonoBehaviour
     public GameObject TimeTable2;
     private bool isOK = true;
     private float timer = 0f;
+    public InteractionSoundManager soundManager;
 
+    private void Start()
+    {
+        soundManager = GameObject.Find("SoundManager").GetComponent<InteractionSoundManager>();
+    }
     void Update()
     {
         if (!isOK) return; // 퍼즐 성공 후에는 더 이상 실행하지 않음
@@ -16,6 +21,7 @@ public class PuzzleManager : MonoBehaviour
         {
             if (CheckPuzzleCompletion())
             {
+                soundManager.PlaybookRightBookSound();
                 TimeTable2.SetActive(true); // 시간표 활성화
                 isOK = false; // 이후로 Update에서 실행되지 않도록 막음
             }

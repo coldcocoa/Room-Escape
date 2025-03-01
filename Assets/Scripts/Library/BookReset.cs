@@ -6,9 +6,10 @@ public class BookReset : MonoBehaviour
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     public float resetSpeed = 2f;  // LERP 속도
-
+    public InteractionSoundManager soundManager;
     private void Start()
     {
+        soundManager = GameObject.Find("SoundManager").GetComponent<InteractionSoundManager>();
         // 게임 시작 시, 원래 위치와 회전값 저장
         originalPosition = transform.position;
         originalRotation = transform.rotation;
@@ -37,9 +38,10 @@ public class BookReset : MonoBehaviour
             yield return null;
         }
         // 완전히 원래 위치로 설정
+        soundManager.PlaybookwrongBookSound();
         transform.position = originalPosition;
         transform.rotation = originalRotation;
-
+        
         // 필요한 경우, Rigidbody 물리 효과 재활성화 등 추가 처리 가능
         Rigidbody rb = GetComponent<Rigidbody>();
         if (rb != null)

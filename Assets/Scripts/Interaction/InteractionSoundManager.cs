@@ -6,6 +6,9 @@ public class InteractionSoundManager : MonoBehaviour
     public AudioClip doorOpenSound;
     public AudioClip buttonPressSound;
     public AudioClip pickupSound;
+    public AudioClip bookPickUp;
+    public AudioClip wrongBook;
+    public AudioClip rightBook;
 
     public void PlayDoorOpenSound()
     {
@@ -20,5 +23,20 @@ public class InteractionSoundManager : MonoBehaviour
     public void PlayPickupSound()
     {
         audioSource.PlayOneShot(pickupSound);
+    }
+
+    public void PlaybookPickUpSound()
+    {
+        audioSource.PlayOneShot(bookPickUp);
+    }
+
+    public void PlaybookwrongBookSound()
+    {
+        audioSource.PlayOneShot(wrongBook);
+    }
+
+    public void PlaybookRightBookSound()
+    {
+        audioSource.PlayOneShot(rightBook);
     }
 }
