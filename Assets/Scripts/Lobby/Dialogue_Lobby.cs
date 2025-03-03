@@ -62,6 +62,6 @@ public class Dialogue_Lobby : MonoBehaviour
     void EndDialogue()
     {
         dialogueBox.SetActive(false); // 대사 박스 비활성화
-        SceneManager.LoadScene("Main"); // MainScene으로 이동
+        SceneManager.LoadScene("Loading"); 
     }
 }
